@@ -1,6 +1,5 @@
 import { createEffect, createSignal } from "solid-js";
 import { Network } from "vis-network";
-import { DataSet } from 'vis-data';
 import axios from "axios";
 
 const Graph = () => {
@@ -18,21 +17,18 @@ const Graph = () => {
     autoResize: true,
     nodes: {
       physics: true,
-      shape: 'dot',
-      margin: 1
+      shape: 'dot'
     },
     edges: {
       smooth: {
-        enabled: true,
-        type: 'dynamic'
-      }
+        enabled: true      }
     },
     physics: {
       enabled: true,
       stabilization: {
         enabled: true,
         fit: true,
-        iterations: 1000,
+        iterations: 3000,
         onlyDynamicEdges: false,
         updateInterval: 50
       }
@@ -51,17 +47,16 @@ const Graph = () => {
   })
 
   createEffect(() => {
-    axios.get('http://localhost:5000/api/').then((response) => {
-      setData(response.data.data.records);
-    }).catch((error) => {
-      console.error(error);
-    })
+    axios.get('http://localhost:5000/api/')
+      .then((response) => {
+        setData(response.data.data.records);
+        console.log(response.data.num_of_nodes);
+        console.log(response.data.num_of_relationships);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
   });
-
-  createEffect(() => {
-    console.log(edges());
-    console.log(nodes());
-  })
 
   createEffect(() => {
     setNetworkData({
@@ -76,49 +71,65 @@ const Graph = () => {
 
   createEffect(() => {
 
+    const current_nodes = [];
+    const current_edges = [];
+
     data().map((item, index) => {
 
       const source_index = item._fields[0].segments[0].start.properties.index;
       const target_index = item._fields[0].segments[0].end.properties.index;
       const amount = item._fields[0].segments[0].relationship.properties.amount;
 
-      let node_present = 0;
+      let source_node_present = 0;
+      let target_node_present = 0;
       
-      for(let node of nodes()) {
-        if(node.id === source_index || node.id === target_index){
-          node_present = 1;
+      for(let node of current_nodes) {
+        if(node.id === source_index){
+          source_node_present = 1;
+          break;
+        }
+      }
+      
+      for(let node of current_nodes) {
+        if(node.id === target_index){
+          target_node_present = 1;
           break;
         }
       }
 
-      if(node_present === 0) {
-        setNodes(prev => [...prev, { id: source_index, label: source_index, color:'#00FF7F' }, { id: target_index, label: target_index, color:'#00FF7F' }])
+      if(source_node_present === 0) {
+        current_nodes.push({ id: source_index, label: source_index, color:'#00FF7F' })
+      }
+
+      if(target_node_present === 0) {
+        current_nodes.push({ id: target_index, label: target_index, color:'#00FF7F' })
       }
 
 
       let edge_present = 0;
 
-      for(let edge of edges()) {
+      for(let edge of current_edges) {
         if(edge.from === source_index && edge.to === target_index) {
-          edge.amount += amount;
           edge_present = 1;
+          edge.amount += amount;
           break;
         }
       }
 
       if(edge_present === 0) {
-        setEdges(prev => [...prev, { from: source_index, to: target_index, amount: amount, arrows: 'to', label: 'PAYS' }])
+        current_edges.push({ "arrows": 'to', "from": source_index, amount: amount, "to": target_index })
       }
 
     })
 
+    setNodes(current_nodes);
+    setEdges(current_edges);
+
   })
 
   return (
-    <div>
-
+    <div class="w-full">
       <div ref={visJSRef} class="border border-red-700"></div>
-      <div>{edges().length}</div>
     </div>
   )
 };
