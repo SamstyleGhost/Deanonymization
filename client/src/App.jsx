@@ -6,7 +6,7 @@ import { Graph, TransactionAmount, AddressAmount, TransactionRating, AddressRati
 function App() {
 
   return (
-    <div class="flex w-full h-dvh overflow-hidden">
+    <div class="flex w-full h-dvh overflow-hidden bg-background text-text">
       <Sidebar />
       <div class="w-full h-dvh overflow-y-auto">
         <Router>

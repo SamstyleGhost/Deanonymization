@@ -17,7 +17,7 @@ const PageRank = () => {
   })
 
   return (
-    <div class="flex flex-col gap-4 w-full">
+    <div class="flex flex-col gap-4 w-full px-2">
       <div class="border-b-2 border-gray-700 flex w-full py-2">
         <div class="w-3/6">Node index</div>
         <div class="w-1/6">In degree</div>

@@ -16,7 +16,7 @@ const AddressAmount = () => {
   })
   
   return (
-    <div class="flex flex-col gap-4 w-full">
+    <div class="flex flex-col gap-4 w-full ml-2">
       <div class="border-b-2 border-gray-700 flex w-full py-2">
         <div class="w-2/3">Node index</div>
         <div class="w-1/3">Total BTC</div>

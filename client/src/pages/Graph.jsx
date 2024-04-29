@@ -79,8 +79,6 @@ const Graph = () => {
 
   createEffect(() => {
     console.log(data());
-    console.log(outgoingTransactionData());
-    console.log(incomingTransactionData());
   })
 
   createEffect(() => {
@@ -135,7 +133,7 @@ const Graph = () => {
       }
 
       if(edge_present === 0) {
-        current_edges.push({ arrows: 'to', from: source_index, amount: amount, label: amount, to: target_index })
+        current_edges.push({ arrows: 'to', from: source_index, amount: amount, to: target_index })
       }
 
     })
@@ -176,14 +174,19 @@ const Graph = () => {
 
   return (
     <div class="w-full overflow-x-hidden pb-4">
-      <div ref={visJSRef} class="m-2 border-2 border-black"></div>
-      <Show when={selectedNode()} fallback={<div><p>Select a node to view additional details</p></div>}>
+      <div ref={visJSRef} class="m-2 border-2 border-black rounded-md drop-shadow-md shadow-md"></div>
+      <Show when={selectedNode()} fallback={<div class="ml-2"><p>Select a node to view additional details</p></div>}>
         <div class="flex flex-col gap-2 ml-2 py-4">
-          <p>Current selected node: {selectedNode()}</p>
+          <p>Current selected node: <span class="text-2xl font-semibold text-primary">{selectedNode()}</span></p>
         </div>
         <Show when={outgoingTransactionData().length !== 0}>
-          <h3 class="ml-2 pb-1 text-xl font-semibold">Outgoing Transactions</h3>
-          <div class="flex flex-col gap-2 w-full ml-2">
+          <h3 class="ml-2 pb-1 text-xl font-semibold underline underline-offset-2">Outgoing Transactions</h3>
+          <div class="flex flex-col gap-2 w-full ml-2 pb-8">
+            <div class="flex w-full py-0.5 border-b border-secondary/55">
+              <div class="w-1/2 truncate text-lg font-medium pr-8">Receiver address</div>
+              <div class="w-1/4 text-lg font-medium pr-4">Amount</div>
+              <div class="w-1/4 text-lg font-medium">Time Stamp</div>
+            </div>
             <For each={outgoingTransactionData()}>
               {item => (
                 <div class="flex w-full py-0.5">
@@ -196,8 +199,13 @@ const Graph = () => {
           </div>
         </Show>
         <Show when={incomingTransactionData().length !== 0}>
-          <p class="ml-2 pt-2 text-xl font-semibold">Incoming Transactions</p>
+          <h3 class="ml-2 pt-4 border-t-2 border-dashed border-black text-xl font-semibold underline underline-offset-2">Incoming Transactions</h3>
           <div class="flex flex-col gap-2 w-full ml-2">
+            <div class="flex w-full py-0.5 border-b border-secondary/55">
+              <div class="w-1/2 truncate text-lg font-medium pr-8">Sender address</div>
+              <div class="w-1/4 text-lg font-medium pr-4">Amount</div>
+              <div class="w-1/4 text-lg font-medium">Time Stamp</div>
+            </div>
             <For each={incomingTransactionData()}>
               {item => (
                 <div class="flex w-full py-0.5">
