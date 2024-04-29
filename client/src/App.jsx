@@ -6,9 +6,9 @@ import { Graph, TransactionAmount, AddressAmount, TransactionRating, AddressRati
 function App() {
 
   return (
-    <div class="flex w-full">
+    <div class="flex w-full h-dvh overflow-hidden">
       <Sidebar />
-      <div class="w-full h-dvh">
+      <div class="w-full h-dvh overflow-y-auto">
         <Router>
           <Route path='/' component={Graph} />
           <Route path='/transaction-node-amount' component={TransactionAmount} />
