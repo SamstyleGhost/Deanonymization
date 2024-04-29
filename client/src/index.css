@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.logo-font {
+  font-family: 'Sentient', serif;
+}
+
+body {
+  font-family: 'Chillax', sans-serif;
+}
